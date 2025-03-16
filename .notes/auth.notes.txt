@@ -1,0 +1,112 @@
+You're using **AWS Cognito** for authentication and **JWT tokens** for authorization. Here's a short summary of how it works in your code:
+
+1. **Frontend (Client) Authentication:**  
+   - The user logs in using AWS Cognito via the `Authenticator` provider in **Next.js** (`providers.tsx`).
+   - The `api.ts` file fetches the authentication session using `fetchAuthSession()` and extracts the `idToken` (JWT token).
+   - This token is sent in the `Authorization` header for API requests.
+
+2. **Backend (Server) Authorization:**  
+   - The **Express middleware (`authMiddleware.ts`)** extracts the JWT token from the request header.
+   - It decodes the token, extracts the user ID (`sub`) and role (`custom:role`), then attaches them to `req.user`.
+   - It checks if the user has the required role (`allowedRoles`) before granting access.
+
+3. **User Data Handling:**  
+   - When a user logs in, the frontend fetches user details from either the **Tenant** or **Manager** tables (based on their role).
+   - If the user doesn't exist in the database, it creates a new entry (`createNewUserInDatabase` in `api.ts`).
+
+4. **API Routes:**  
+   - `tenantRoutes.ts` and `managerRoutes.ts` define routes for fetching and creating users in the database.
+   - `tenantControllers.ts` and `managerControllers.ts` handle these requests using **Prisma** to interact with the PostgreSQL database.
+
+**In short:**  
+Cognito handles authentication → Frontend sends JWT → Middleware verifies JWT & role → Users are retrieved or created in the database. ✅
+
+We can now break it down step by step if you need! 🔍
+
+
+
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+client\src\state\api.ts 
+
+baseQuery: fetchBaseQuery({
+    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+    prepareHeaders: async (headers) => {
+      const session = await fetchAuthSession();
+      const { idToken } = session.tokens ?? {};
+      if (idToken) {
+        headers.set("Authorization", `Bearer ${idToken}`);
+      }
+      return headers;
+    },
+
+baseQuery:
+What It Is: A function that acts as the base for making HTTP requests.
+      and in baseQuery there is ** prepareHeaders **
+      The prepareHeaders function is essential for dynamically modifying request headers before an API call. Without it, you'd have to manually attach headers for each request, making your code repetitive and harder to maintain.
+
+      example without prepareHeaders in baseQuery
+
+      problems 
+
+      example With prepareHeaders in baseQuery
+
+      ✅ Benefits
+
+      when to use prepareHeaders and when not to
+
+      because
+
+reducerPath: 
+      what it is?
+
+      optional how multiple api warks in query
+
+
+endpoints:
+   1. Fetches the auth session.
+
+   what else does the session contain
+
+   2. Retrieves the user role (manager or tenant).
+
+      what is JWT
+
+   3. Calls different endpoints based on the role.
+
+   4. 4. If the user doesn't exist (404), it creates a new user in the database.
+
+
+   🧐🧐extended endpoints🧐
+   the normal endpoints🧐 first endpoint 
+   
+   the endpoints🧐 we used second endpoint
+   
+   Create Product Endpoint (Mutation)
+
+
+   explanation 
+
+   compare 
+
+   1st 
+   Purpose
+   operation
+   
+
+   Get Auth User Endpoint (Query with Custom Logic)
+
+   2nd
+   Purpose
+   operation
+
+
+   fetchWithBQ
+
+   a simple post with queryFn
+
+
+   🧐🧐
+
+   server\src\index.ts
+
+   a summary what happening

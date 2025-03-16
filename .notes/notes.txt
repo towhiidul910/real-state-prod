@@ -1,0 +1,13 @@
+after 
+this 
+we need to create managers and tenants endpoints so we can grab the user information that if it already exist 
+
+but we also need if the user is authorized 
+we can use the cognito authorizers to autometicly conform that it cognito authintication is legetamet 
+but in our case 
+we create server\src\middleware\authMiddleware.ts
+
+after creating middleware
+this middleware
+
+pass this middleware to the routs 
