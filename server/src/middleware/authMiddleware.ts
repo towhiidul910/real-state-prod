@@ -25,25 +25,7 @@ export const authMiddleware = (allowedRoles: string[]) => {
       res.status(401).json({ massage: "Unauthorized" });
       return;
     }
-    // try {
-    //   const decoded = jwt.decode(token) as DecodedToken;
-    //   const userRole = decoded["custom:role"] || "";
-
-    //   req.user = {
-    //     id: decoded.sub,
-    //     role: userRole,
-    //   };
-
-    //   const hasAccess = allowedRoles.includes(userRole.toLowerCase());
-    //   if (!hasAccess) {
-    //     res.status(403).json({ massage: "Access Denied sekiro" });
-    //     return;
-    //   }
-    // } catch (err) {
-    //   console.error("Failed to decode token", err);
-    //   res.status(400).json({ massage: "Invalid token" });
-    //   return;
-    // }
+    
     try {
       const decoded = jwt.decode(token) as DecodedToken;
       console.log("Decoded Token:", decoded); // ✅ Add this line
@@ -70,3 +52,24 @@ export const authMiddleware = (allowedRoles: string[]) => {
     next();
   };
 };
+
+
+// try {
+    //   const decoded = jwt.decode(token) as DecodedToken;
+    //   const userRole = decoded["custom:role"] || "";
+
+    //   req.user = {
+    //     id: decoded.sub,
+    //     role: userRole,
+    //   };
+
+    //   const hasAccess = allowedRoles.includes(userRole.toLowerCase());
+    //   if (!hasAccess) {
+    //     res.status(403).json({ massage: "Access Denied sekiro" });
+    //     return;
+    //   }
+    // } catch (err) {
+    //   console.error("Failed to decode token", err);
+    //   res.status(400).json({ massage: "Invalid token" });
+    //   return;
+    // }

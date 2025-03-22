@@ -8,7 +8,7 @@ import { authMiddleware } from "./middleware/authMiddleware";
 // ROUTE IMPORT
 import tenantRoutes from "./routes/tenantRoutes";
 import managerRoutes from "./routes/managerRoutes";
-
+import propertyRoutes from "./routes/propertyRoutes";
 // CONFIGURATIONS
 dotenv.config();
 const app = express();
@@ -27,6 +27,7 @@ app.get("/", (req, res) => {
   res.send("This is home route");
 });
 
+app.use("/properties", propertyRoutes); // we are not using authMiddleware here because this api end point should be public , and some of them inside are not going to be public
 app.use("/tenants", authMiddleware(["tenant"]), tenantRoutes);
 app.use("/managers", authMiddleware(["manager"]), managerRoutes);
 
@@ -39,3 +40,4 @@ app.listen(port, () => {
 });
 
 // why the index.ts is useful
+
