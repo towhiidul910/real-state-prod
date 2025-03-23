@@ -9,6 +9,8 @@ import { authMiddleware } from "./middleware/authMiddleware";
 import tenantRoutes from "./routes/tenantRoutes";
 import managerRoutes from "./routes/managerRoutes";
 import propertyRoutes from "./routes/propertyRoutes";
+import leaseRoutes from "./routes/leaseRoutes"
+import applicationRoutes from "./routes/applicationRoutes"
 // CONFIGURATIONS
 dotenv.config();
 const app = express();
@@ -27,7 +29,11 @@ app.get("/", (req, res) => {
   res.send("This is home route");
 });
 
+
+
+app.use("/applications", applicationRoutes)
 app.use("/properties", propertyRoutes); // we are not using authMiddleware here because this api end point should be public , and some of them inside are not going to be public
+app.use("/leases", leaseRoutes)
 app.use("/tenants", authMiddleware(["tenant"]), tenantRoutes);
 app.use("/managers", authMiddleware(["manager"]), managerRoutes);
 
