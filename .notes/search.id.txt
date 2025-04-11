@@ -1,0 +1,6 @@
+to create  
+http://localhost:3000/search/1 or http://localhost:3000/search/idOfTheProperty
+
+
+first create folder 
+client\src\app\(nondashboard)\search\[id]

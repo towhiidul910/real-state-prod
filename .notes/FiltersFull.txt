@@ -1,0 +1,42 @@
+client\src\app\(nondashboard)\search\FiltersFull.tsx
+
+
+**** the full basic code
+ 
+
+** first we import some important thing 
+
+
+** creating the main function, const FiltersFull
+
+** const dispatch = useDispatch();
+
+** const router = useRouter();
+
+** const pathname = usePathname();
+
+** const isFiltersFullOpen = useAppSelector((state) => state.global.isFiltersFullOpen);
+        * Understanding  State vs Actions
+
+        this is the same way we used Selector for viewMode & for filters but here function are diffrent in client\src\state\index.ts
+
+
+
+*** updateURL
+
+        ** instance 
+        ** updatedSearchParams
+        ** the loop 
+        ** the loop part 2
+        ** cleanFilters 
+        ** backend connection with the url
+        ** backend connection with the url part 2
+
+        ** what request we are doing here put , post, delete or get,  well explain it latter
+
+*** handleFilterChange
+        ** key, value, isMin
+        ** why this function
+        ** explain part 1 without gpt the Redux state part from index.ts
+        ** explain part 2 with gpt version
+        ** explain handleFilterChange part 3 with gpt version

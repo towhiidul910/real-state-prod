@@ -1,0 +1,4 @@
+1. we make a map live in mapbox 
+2. we create an endpoint with the token in client side
+3. in client\src\app\(nondashboard)\search\Map.tsx we create the map
+4. in api 

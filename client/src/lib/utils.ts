@@ -9,6 +9,8 @@ export function cn(...inputs: ClassValue[]) {
 export function formatEnumString(str: string) {
   return str.replace(/([A-Z])/g, " $1").trim();
 }
+//turning camelCase or PascalCase into readable, human-friendly strings
+// like this "WasherDryer" to "Washer Dryer"
 
 export function formatPriceValue(value: number | null, isMin: boolean) {
   if (value === null || value === 0)
@@ -21,9 +23,11 @@ export function formatPriceValue(value: number | null, isMin: boolean) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//If this value is trash (like undefined, "any", "", or completely empty []), throw it out. The API don’t wanna see that garbage
 export function cleanParams(params: Record<string, any>): Record<string, any> {
-  return Object.fromEntries(
-    Object.entries(params).filter(
+  return Object.fromEntries( // turn back into an object
+    Object.entries(params).filter( // turn object into array like [key, value] 
+      // throw away junk values
       (
         [_, value] // eslint-disable-line @typescript-eslint/no-unused-vars
       ) =>

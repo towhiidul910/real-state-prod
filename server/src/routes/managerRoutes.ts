@@ -7,7 +7,7 @@ import {
 } from "../controllers/ManagerControllers"
 
 const router = express.Router()
-console.log(router)
+// console.log(router)
 
 router.get("/:cognitoId", getManager)
 
