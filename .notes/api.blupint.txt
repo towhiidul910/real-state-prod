@@ -95,3 +95,5 @@ notes
 
 PUT, DELETE, PATCH,
 more example
+
+a chat with gpt about api and backend = https://chatgpt.com/share/67f9d2ff-30d8-800d-95f2-c1990d442fa3

@@ -81,8 +81,7 @@ export const getProperties = async (
 
     if (amenities && amenities !== "any") {
       const amenitiesArray = (amenities as string).split(",");
-      whereConditions.push(Prisma.sql`p.amenities @> ${amenitiesArray}`);  
-      //Uses PostgreSQL array containment operator (@>) to check if the p.amenities column contains all requested amenities.
+      whereConditions.push(Prisma.sql`p.amenities @> ${amenitiesArray}`);
     }
 
     if (availableFrom && availableFrom !== "any") {
@@ -196,6 +195,9 @@ export const createProperty = async (
   res: Response
 ): Promise<void> => {
   try {
+    console.log("BODY:", req.body);
+console.log("FILES:", req.files);
+
     const files = req.files as Express.Multer.File[];
     const {
       address,
@@ -207,23 +209,23 @@ export const createProperty = async (
       ...propertyData
     } = req.body;
 
-    const photoUrls = await Promise.all(
-      files.map(async (file) => {
-        const uploadParams = {
-          Bucket: process.env.S3_BUCKET_NAME!,
-          Key: `properties/${Date.now()}-${file.originalname}`,
-          Body: file.buffer,
-          ContentType: file.mimetype,
-        };
+    // const photoUrls = await Promise.all(
+    //   files.map(async (file) => {
+    //     const uploadParams = {
+    //       Bucket: process.env.S3_BUCKET_NAME!,
+    //       Key: `properties/${Date.now()}-${file.originalname}`,
+    //       Body: file.buffer,
+    //       ContentType: file.mimetype,
+    //     };
 
-        const uploadResult = await new Upload({
-          client: s3Client,
-          params: uploadParams,
-        }).done();
+    //     const uploadResult = await new Upload({
+    //       client: s3Client,
+    //       params: uploadParams,
+    //     }).done();
 
-        return uploadResult.Location;
-      })
-    );
+    //     return uploadResult.Location;
+    //   })
+    // );
 
     const geocodingUrl = `https://nominatim.openstreetmap.org/search?${new URLSearchParams(
       {
@@ -259,7 +261,7 @@ export const createProperty = async (
     const newProperty = await prisma.property.create({
       data: {
         ...propertyData,
-        photoUrls,
+        // photoUrls,
         locationId: location.id,
         managerCognitoId,
         amenities:
@@ -286,6 +288,8 @@ export const createProperty = async (
     });
 
     res.status(201).json(newProperty);
+    
+
   } catch (err: any) {
     res
       .status(500)
