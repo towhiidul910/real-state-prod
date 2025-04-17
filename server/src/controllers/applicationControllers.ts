@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
-// import { PrismaClient } from "@prisma/client/extension";
-// Replace from '@prisma/client/extension'
-import { PrismaClient } from "@prisma/client"; // Correct import
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -11,6 +9,7 @@ export const listApplications = async (
 ): Promise<void> => {
   try {
     const { userId, userType } = req.query;
+
     let whereClause = {};
 
     if (userId && userType) {
@@ -38,7 +37,7 @@ export const listApplications = async (
       },
     });
 
-    function calculationNextPaymentDate(startDate: Date): Date {
+    function calculateNextPaymentDate(startDate: Date): Date {
       const today = new Date();
       const nextPaymentDate = new Date(startDate);
       while (nextPaymentDate <= today) {
@@ -69,19 +68,23 @@ export const listApplications = async (
           lease: lease
             ? {
                 ...lease,
-                nextPaymentDate: calculationNextPaymentDate(lease.startDate),
+                nextPaymentDate: calculateNextPaymentDate(lease.startDate),
               }
             : null,
         };
       })
     );
+
+    console.log("formattedApplications", formattedApplications)
+
     res.json(formattedApplications);
   } catch (error: any) {
-    res.status(500).json({
-      message: `Error retrieving applications: ${error.message}`, // Fixed spelling
-    });
+    res
+      .status(500)
+      .json({ message: `Error retrieving applications: ${error.message}` });
   }
 };
+
 export const createApplication = async (
   req: Request,
   res: Response
@@ -102,15 +105,17 @@ export const createApplication = async (
       where: { id: propertyId },
       select: { pricePerMonth: true, securityDeposit: true },
     });
+
     if (!property) {
-      res.status(404).json({ message: "propeer not found" });
+      res.status(404).json({ message: "Property not found" });
       return;
     }
+
     const newApplication = await prisma.$transaction(async (prisma) => {
       // Create lease first
       const lease = await prisma.lease.create({
         data: {
-          startDate: new Date(),
+          startDate: new Date(), // Today
           endDate: new Date(
             new Date().setFullYear(new Date().getFullYear() + 1)
           ), // 1 year from today
@@ -125,30 +130,23 @@ export const createApplication = async (
         },
       });
 
-      // then create application with lease connection
-
+      // Then create application with lease connection
       const application = await prisma.application.create({
         data: {
           applicationDate: new Date(applicationDate),
           status,
-          propertyId,
-          tenantCognitoId,
           name,
           email,
           phoneNumber,
           message,
           property: {
-            connect: {
-              id: propertyId,
-            },
+            connect: { id: propertyId },
           },
           tenant: {
             connect: { cognitoId: tenantCognitoId },
           },
           lease: {
-            connect: {
-              id: lease.id,
-            },
+            connect: { id: lease.id },
           },
         },
         include: {
@@ -157,16 +155,15 @@ export const createApplication = async (
           lease: true,
         },
       });
+
       return application;
     });
 
     res.status(201).json(newApplication);
-
-    //----------------
   } catch (error: any) {
-    res.status(500).json({
-      message: `Error retrieving leases payment: ${error.message}`, // Fixed spelling
-    });
+    res
+      .status(500)
+      .json({ message: `Error creating application: ${error.message}` });
   }
 };
 
@@ -175,18 +172,20 @@ export const updateApplicationStatus = async (
   res: Response
 ): Promise<void> => {
   try {
-    const {id} = req.params;
-    const {status} = req.body;
+    const { id } = req.params;
+    const { status } = req.body;
+    console.log("status:", status);
 
     const application = await prisma.application.findUnique({
-      where: {id: Number(id)},
+      where: { id: Number(id) },
       include: {
         property: true,
         tenant: true,
       },
     });
+
     if (!application) {
-      res.status(404).json({ message: "Application not found" });
+      res.status(404).json({ message: "Application not found." });
       return;
     }
 
@@ -196,45 +195,45 @@ export const updateApplicationStatus = async (
           startDate: new Date(),
           endDate: new Date(
             new Date().setFullYear(new Date().getFullYear() + 1)
-          ), // 1 year from today
+          ),
           rent: application.property.pricePerMonth,
-          deposit: application.property.securityDeposit,propertyId: application.propertyId,
-          tenantCognitoId: application.tenantCognitoId
-        }
+          deposit: application.property.securityDeposit,
+          propertyId: application.propertyId,
+          tenantCognitoId: application.tenantCognitoId,
+        },
       });
 
-      // Update the property to connect the tenant 
+      // Update the property to connect the tenant
       await prisma.property.update({
-        where: {id: application.propertyId},
+        where: { id: application.propertyId },
         data: {
           tenants: {
-            connect: {cognitoId: application.tenantCognitoId},
-          }
-        }
+            connect: { cognitoId: application.tenantCognitoId },
+          },
+        },
       });
 
       // Update the application with the new lease ID
       await prisma.application.update({
-        where: {id: Number(id)},
-        data: {status, leaseId: newLease.id},
+        where: { id: Number(id) },
+        data: { status, leaseId: newLease.id },
         include: {
           property: true,
           tenant: true,
           lease: true,
-        }
-      })
+        },
+      });
     } else {
-      // Update the application status (for both "Denied" and other status)
+      // Update the application status (for both "Denied" and other statuses)
       await prisma.application.update({
-        where: {id: Number(id)},
-        data: {status},
-       
+        where: { id: Number(id) },
+        data: { status },
       });
     }
 
-    // respond with the updated application details
-    const updateApplication = await prisma.application.findUnique({
-      where: {id: Number(id)},
+    // Respond with the updated application details
+    const updatedApplication = await prisma.application.findUnique({
+      where: { id: Number(id) },
       include: {
         property: true,
         tenant: true,
@@ -242,10 +241,11 @@ export const updateApplicationStatus = async (
       },
     });
 
-    res.json(updateApplication)
+    
+    res.json(updatedApplication);
   } catch (error: any) {
-    res.status(500).json({
-      message: `Error updating application status: ${error.message}`, // Fixed spelling
-    });
+    res
+      .status(500)
+      .json({ message: `Error updating application status: ${error.message}` });
   }
 };

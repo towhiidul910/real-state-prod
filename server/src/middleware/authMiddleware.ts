@@ -28,10 +28,10 @@ export const authMiddleware = (allowedRoles: string[]) => {
     
     try {
       const decoded = jwt.decode(token) as DecodedToken;
-      // console.log("Decoded Token:", decoded); // ✅ Add this line
+       console.log("Decoded Token:", decoded); // ✅ Add this line
     
       const userRole = decoded["custom:role"] || "";
-      // console.log("Extracted Role:", userRole); // ✅ Check if role is correct
+       console.log("Extracted Role:", userRole); // ✅ Check if role is correct
     
       req.user = {
         id: decoded.sub,
@@ -39,6 +39,9 @@ export const authMiddleware = (allowedRoles: string[]) => {
       };
     
       const hasAccess = allowedRoles.includes(userRole.toLowerCase());
+      console.log("allowRoles:", allowedRoles)
+      // const hasAccess = allowedRoles.map(role => role.toLowerCase()).includes(userRole.toLowerCase());
+      console.log("hasAccess:", hasAccess)
       if (!hasAccess) {
         res.status(403).json({ message: "Access Denied sekiro" });
         return;
