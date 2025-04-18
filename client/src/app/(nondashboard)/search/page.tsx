@@ -1,16 +1,15 @@
 "use client";
+
 import { NAVBAR_HEIGHT } from "@/lib/constants";
 import { useAppDispatch, useAppSelector } from "@/state/redux";
-// import { useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
 import FiltersBar from "./FiltersBar";
 import FiltersFull from "./FiltersFull";
 import { cleanParams } from "@/lib/utils";
 import { setFilters } from "@/state";
-import { useSearchParams } from "next/navigation";
 import Map from "./Map";
 import Listings from "./Listings";
-// import FiltersBar from "./FiltersBar";
 
 const SearchPage = () => {
   const searchParams = useSearchParams();
@@ -18,7 +17,7 @@ const SearchPage = () => {
   const isFiltersFullOpen = useAppSelector(
     (state) => state.global.isFiltersFullOpen
   );
-  // console.log("isFiltersFullOpen page:", isFiltersFullOpen);
+
   useEffect(() => {
     const initialFilters = Array.from(searchParams.entries()).reduce(
       (acc: any, [key, value]) => {
@@ -29,29 +28,25 @@ const SearchPage = () => {
         } else {
           acc[key] = value === "any" ? null : value;
         }
-  
+
         return acc;
       },
       {}
     );
-  
+
     const cleanedFilters = cleanParams(initialFilters);
     dispatch(setFilters(cleanedFilters));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  
-
 
   return (
     <div
       className="w-full mx-auto px-5 flex flex-col"
       style={{
         height: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
-        // calculate so we can use % , -, +, * etc.
       }}
-      
     >
       <FiltersBar />
-      <div className="flex justify-between flex-1 overflow-hidden gap-3 mb-3">
+      <div className="flex justify-between flex-1 overflow-hidden gap-3 mb-5">
         <div
           className={`h-full overflow-auto transition-all duration-300 ease-in-out ${
             isFiltersFullOpen
@@ -61,25 +56,13 @@ const SearchPage = () => {
         >
           <FiltersFull />
         </div>
-      <Map/>
-
-        
-        <div className="basis-4/12 overflow-y-auto"><Listings/></div>
-        
+        <Map />
+        <div className="basis-4/12 overflow-y-auto">
+          <Listings />
+        </div>
       </div>
     </div>
   );
 };
 
 export default SearchPage;
-
-// const isFiltersFullOpen = useAppSelector( (state) => state.global.isFiltersFullOpen);
-// const isDarkMode = useAppSelector((state) => state.darkMode.isDarkMode);
-
-// state → This represents the entire Redux store state.
-
-// state.darkMode → This accesses the darkMode slice in the store.
-
-// state.darkMode.isDarkMode → This retrieves the boolean value (true or false) stored inside the darkMode slice.
-
-// isFiltersFullOpen = useAppSelector((the entire redux store state) => the entire redux store state.This accesses the darkMode slice in the store.retrieves the boolean value stored inside the darkMode slice);

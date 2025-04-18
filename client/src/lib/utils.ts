@@ -22,14 +22,14 @@ export function formatPriceValue(value: number | null, isMin: boolean) {
   return isMin ? `$${value}+` : `<$${value}`;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 //If this value is trash (like undefined, "any", "", or completely empty []), throw it out. The API don’t wanna see that garbage
 export function cleanParams(params: Record<string, any>): Record<string, any> {
   return Object.fromEntries( // turn back into an object
     Object.entries(params).filter( // turn object into array like [key, value] 
       // throw away junk values
       (
-        [_, value] // eslint-disable-line @typescript-eslint/no-unused-vars
+        [_, value]  
       ) =>
         value !== undefined &&
         value !== "any" &&

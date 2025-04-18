@@ -1,0 +1,8 @@
+:the video link : 10:54:00
+
+1. go to server>src>index 
+wrap the process.env.PORT under Number(process.env.PORT)
+
+2. create ecosystem.config.js in server : server\ecosystem.config.js
+
+3. in client\eslint.config.mjs add some rules: 
