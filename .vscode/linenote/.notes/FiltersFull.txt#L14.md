@@ -1,0 +1,1 @@
+The useRouter hook allows you to programmatically change routes inside Client Components.

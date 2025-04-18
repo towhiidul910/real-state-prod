@@ -1,0 +1,1 @@
+Your FiltersFull.tsx component is supposed to manage and update filters for a search feature, but it's currently doing… basically nothing useful (just rendering "FiltersBAr").
