@@ -6,3 +6,57 @@ wrap the process.env.PORT under Number(process.env.PORT)
 2. create ecosystem.config.js in server : server\ecosystem.config.js
 
 3. in client\eslint.config.mjs add some rules: 
+
+4. then run , npm run build
+
+5. then deploy the final code in git hub from root file 
+
+====+++ Now AWS +++=====
+
+1. create account (if you don't have)
+
+2. here is aws architecture https://miro.com/app/board/uXjVLgjxNpE=/
+
+3. go to vpc and create a new vpc
+
+4. now create subnets in this vpc. well create 2 subnets 1. public 2. private subnets
+
+5. now we need to create internet gateways , for vpc
+
+6. Route tables,  in the same vpc dashboard 
+
+======++++ EC2 ++++======
+
+1. instances
+
+2. in instances terminal EC2 Setup Instructions
+
+3. PM2
+
+4. how to use PM2
+
+
+========+++ RDS +++======= 11:41:00
+
+1. RDS Dtata base create
+2. edit vpc Security groups
+3. now we wanna to change the outbound of the ec2
+gpt explain out and in bound
+
+4. Setup the env for backend 
+
+
+========+++ Amplify +++=========
+
+1. deploy app
+
+2. advance setting
+
+3. http to https request / create invoke URL
+
+4. now add the api Invoke URL
+
+=========+++ S3 +++===========
+
+1. up date the app 
+

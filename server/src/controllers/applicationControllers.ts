@@ -248,4 +248,4 @@ export const updateApplicationStatus = async (
       .status(500)
       .json({ message: `Error updating application status: ${error.message}` });
   }
-};
+}; 
